@@ -8,7 +8,6 @@
 
 :root {
     --dark: #161b24;
-    --white: #e5e7eb;
     --blue: #1964ee;
     --red: #da5015;
     --green: #81ff21;
@@ -18,13 +17,15 @@ body {
     font-family: 'Comic Neue', Arial, Helvetica, sans-serif;
     font-weight: 700;
     background: var(--dark);
-    color: var(--white);
+    color: white;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
 h1 {
-    margin-top: 30px;
+    margin: 35px 0;
     font-size: 4.5rem;
-    text-align: center;
 }
 
 #gameboard {
@@ -40,14 +41,14 @@ h1 {
 }
 
 #gameboard {
-    border: 3px solid var(--white);
+    border: 3px solid white;
     border-radius: 20px;
 }
 
 .cell {
     text-align: center;
     line-height: 110px;
-    border: 2px solid var(--white);
+    border: 2px solid white;
 }
 
 .cell:first-child {
@@ -64,4 +65,43 @@ h1 {
 
 .cell:last-child {
     border-radius: 0 0 15px 0;
+}
+
+#players,
+#players > div {
+    font-size: 4rem;
+    display: flex;
+    align-items: center;
+    gap: 30px;
+}
+
+#players > div {
+    gap: 15px;
+}
+
+#players p {
+    font-size: 3rem;
+}
+
+#player-one {
+    color: var(--blue);
+}
+
+#player-two {
+    color: var(--red);
+}
+
+.health {
+    height: 40px;
+    width: 180px;
+    padding: 5px 4px;
+    border: 3px solid white;
+    border-radius: 8px;
+    display: grid;
+    gap: 4px;
+    grid-template-columns: repeat(auto-fill, minmax(30px, 1fr));
+}
+
+.health > div {
+    background: white;
 }

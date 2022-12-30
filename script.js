@@ -2,7 +2,7 @@ const gameBoardGrid = document.querySelector('#gameboard');
 const boardCell = document.querySelectorAll('.cell');
 
 const Player = (name, marker) => {
-    let health = 3;
+    let health = 5;
 
     const lose = () => console.log('YOU LOSE!');
     const removeHealth = () => (health > 0 ? health-- : lose());
@@ -10,22 +10,28 @@ const Player = (name, marker) => {
     return { name, marker, health, removeHealth };
 };
 
-const gameBoard = (() => {
+const Gameboard = (() => {
     const board = [];
-    const playerOne = Player('playerOne', 'x');
-    const playerTwo = Player('playerTwo', 'o');
-    let currentPlayer = playerOne;
+    let playerOne = Player('Player 1', 'x');
+    let playerTwo = Player('Player 2', 'o');
+
+    return { board, playerOne, playerTwo };
+})();
+
+const game = (() => {
+    let _currentPlayer = Gameboard.playerOne;
 
     const addMarker = (e) => {
         const index = e.target.dataset.index;
 
-        if (!board[index]) {
-            board[index] = currentPlayer.marker;
+        if (!Gameboard.board[index]) {
+            Gameboard.board[index] = _currentPlayer.marker;
 
-            displayController.showBoard();
-            _checkWinner(currentPlayer);
+            display.showBoard();
+            _checkWinner(_currentPlayer);
 
-            currentPlayer = currentPlayer === playerOne ? playerTwo : playerOne;
+            _currentPlayer =
+                _currentPlayer === Gameboard.playerOne ? Gameboard.playerTwo : Gameboard.playerOne;
         }
     };
 
@@ -33,7 +39,7 @@ const gameBoard = (() => {
         const row = [];
 
         while (i <= end) {
-            row.push(board[i]);
+            row.push(Gameboard.board[i]);
             i += increment;
         }
 
@@ -66,19 +72,16 @@ const gameBoard = (() => {
     };
 
     return {
-        board,
-        playerOne,
-        playerTwo,
         addMarker
     };
 })();
 
-const displayController = (() => {
+const display = (() => {
     const showBoard = () => {
         for (let i = 0; i < 9; i++) {
             const cell = document.querySelector(`[data-index='${i}']`);
 
-            cell.textContent = gameBoard.board[i];
+            cell.textContent = Gameboard.board[i];
         }
     };
 
@@ -87,4 +90,4 @@ const displayController = (() => {
     };
 })();
 
-boardCell.forEach((cell) => cell.addEventListener('click', gameBoard.addMarker));
+boardCell.forEach((cell) => cell.addEventListener('click', game.addMarker));
