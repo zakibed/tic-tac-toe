@@ -1,5 +1,5 @@
-const gameBoardEl = document.querySelector('#gameboard');
-const boardCellEl = document.querySelectorAll('#gameboard > div');
+const gameBoardGrid = document.querySelector('#gameboard');
+const boardCell = document.querySelectorAll('#gameboard > div');
 
 const Player = (name) => {
     let health = 3;
@@ -12,50 +12,40 @@ const Player = (name) => {
 
 const gameBoard = (() => {
     const arr = [];
+    const playerOne = Player('playerOne');
+    const playerTwo = Player('playerTwo');
 
-    let row1 = 0,
-        row2 = 0,
-        row3 = 0;
+    const _getThreeInARow = (i, end, increment = 1) => {
+        const row = [];
 
-    let col1 = 0,
-        col2 = 0,
-        col3 = 0;
-
-    let diagLR = 0,
-        diagRL = 0;
-
-    const _checkWinner = (index) => {
-        if (index < 3) {
-            row1++;
-            index == 0 ? col1++ : index == 1 ? col2++ : col3++;
-        } else if (index < 6) {
-            row2++;
-            index == 3 ? col1++ : index == 4 ? col2++ : col3++;
-        } else {
-            row3++;
-            index == 6 ? col1++ : index == 7 ? col2++ : col3++;
+        while (i <= end) {
+            row.push(arr[i]);
+            i += increment;
         }
 
-        if (index == 0 || index == 8) {
-            diagLR++;
-        } else if (index == 2 || index == 6) {
-            diagRL++;
-        } else if (index == 4) {
-            diagLR++;
-            diagRL++;
+        return row;
+    };
+
+    const _checkWinner = () => {
+        // check columns
+        for (let i = 0; i < 3; i++) {
+            const jackpot = _getThreeInARow(i, i + 6, 3).every((n) => n === 'x');
+            if (jackpot) console.log('YAHOO!');
         }
 
-        if (
-            row1 == 3 ||
-            row2 == 3 ||
-            row3 == 3 ||
-            col1 == 3 ||
-            col2 == 3 ||
-            col3 == 3 ||
-            diagLR == 3 ||
-            diagRL == 3
-        ) {
-            console.log('winner!');
+        // check rows
+        for (let i = 0; i <= 6; i += 3) {
+            const jackpot = _getThreeInARow(i, i + 2).every((n) => n === 'x');
+            if (jackpot) console.log('YAHOO!');
+        }
+
+        // check diagonally
+        for (let i = 0; i < 3; i += 2) {
+            const jackpot =
+                i === 0
+                    ? _getThreeInARow(i, 8, 4).every((n) => n === 'x')
+                    : _getThreeInARow(i, 6, 2).every((n) => n === 'x');
+            if (jackpot) console.log('YAHOO!');
         }
     };
 
@@ -65,7 +55,7 @@ const gameBoard = (() => {
         if (!arr[index]) {
             arr[index] = 'x';
             displayController.showBoard();
-            _checkWinner(index);
+            _checkWinner();
         }
     };
 
@@ -78,7 +68,9 @@ const gameBoard = (() => {
 const displayController = (() => {
     const showBoard = () => {
         for (let i = 0; i < 9; i++) {
-            document.querySelector(`[data-index='${i}']`).textContent = gameBoard.arr[i];
+            const cell = document.querySelector(`[data-index='${i}']`);
+
+            cell.textContent = gameBoard.arr[i];
         }
     };
 
@@ -87,7 +79,4 @@ const displayController = (() => {
     };
 })();
 
-const playerOne = Player('playerOne');
-const playerTwo = Player('playerTwo');
-
-boardCellEl.forEach((cell) => cell.addEventListener('click', gameBoard.addMarker));
+boardCell.forEach((cell) => cell.addEventListener('click', gameBoard.addMarker));
