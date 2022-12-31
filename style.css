@@ -29,15 +29,12 @@ h1 {
 }
 
 #gameboard {
+    margin-top: 60px;
     width: 400px;
     height: 400px;
     font-size: 6rem;
     display: grid;
     grid-template: 1fr 1fr 1fr / 1fr 1fr 1fr;
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
 }
 
 #gameboard {
@@ -49,6 +46,11 @@ h1 {
     text-align: center;
     line-height: 110px;
     border: 2px solid white;
+}
+
+.cell.hover:hover {
+    cursor: pointer;
+    background: #202734;
 }
 
 .cell:first-child {
@@ -76,7 +78,8 @@ h1 {
 }
 
 #players > div {
-    gap: 15px;
+    flex-direction: column;
+    gap: 20px;
 }
 
 #players p {
@@ -89,6 +92,12 @@ h1 {
 
 #player-two {
     color: var(--red);
+}
+
+.marker {
+    font-family: 'Comic Neue', Arial, Helvetica, sans-serif;
+    font-size: 3.3rem;
+    vertical-align: 12px;
 }
 
 .health {

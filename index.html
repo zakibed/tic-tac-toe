@@ -3,7 +3,7 @@
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>Document</title>
+        <title>Tic-Tac-Toe</title>
         <link rel="stylesheet" href="style.css" />
         <script src="script.js" defer></script>
         <script src="https://kit.fontawesome.com/ea6e9201dc.js" crossorigin="anonymous"></script>
@@ -13,7 +13,7 @@
 
         <div id="players">
             <div id="player-one">
-                <i class="fa-solid fa-user"></i>
+                <i class="fa-solid fa-user"><span class="marker"> - x</span></i>
                 <div class="health">
                     <div></div>
                     <div></div>
@@ -26,7 +26,8 @@
             <p>vs.</p>
 
             <div id="player-two">
-                <i class="fa-solid fa-user"></i>
+                <i class="fa-solid fa-user"><span class="marker"> - o</span></i>
+                <!-- <i class="fa-solid fa-robot"></i> -->
                 <div class="health">
                     <div></div>
                     <div></div>
@@ -38,15 +39,15 @@
         </div>
 
         <div id="gameboard">
-            <div data-index="0" class="cell"></div>
-            <div data-index="1" class="cell"></div>
-            <div data-index="2" class="cell"></div>
-            <div data-index="3" class="cell"></div>
-            <div data-index="4" class="cell"></div>
-            <div data-index="5" class="cell"></div>
-            <div data-index="6" class="cell"></div>
-            <div data-index="7" class="cell"></div>
-            <div data-index="8" class="cell"></div>
+            <div data-index="0" class="cell hover"></div>
+            <div data-index="1" class="cell hover"></div>
+            <div data-index="2" class="cell hover"></div>
+            <div data-index="3" class="cell hover"></div>
+            <div data-index="4" class="cell hover"></div>
+            <div data-index="5" class="cell hover"></div>
+            <div data-index="6" class="cell hover"></div>
+            <div data-index="7" class="cell hover"></div>
+            <div data-index="8" class="cell hover"></div>
         </div>
     </body>
 </html>

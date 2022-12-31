@@ -1,39 +1,72 @@
-const gameBoardGrid = document.querySelector('#gameboard');
+const boardGrid = document.querySelector('#gameboard');
 const boardCell = document.querySelectorAll('.cell');
+const playerOneHealth = document.querySelector('#player-one .health');
+const playerTwoHealth = document.querySelector('#player-two .health');
 
 const Player = (name, marker) => {
     let health = 5;
 
-    const lose = () => console.log('YOU LOSE!');
-    const removeHealth = () => (health > 0 ? health-- : lose());
+    const winRound = (enemy) => {
+        enemy.loseRound();
+        console.log(`%c${name} WINS this round!`, 'color: lime;');
+    };
 
-    return { name, marker, health, removeHealth };
+    const loseRound = () => {
+        health--;
+        display.removeHealthBar(name);
+        Gameboard.reset();
+        console.log(`%c${name}'s health: ${health}`, 'color: red;');
+    };
+
+    return { name, marker, health, winRound, loseRound };
 };
 
 const Gameboard = (() => {
-    const board = [];
-    let playerOne = Player('Player 1', 'x');
-    let playerTwo = Player('Player 2', 'o');
+    let board = [];
 
-    return { board, playerOne, playerTwo };
+    const _setNewRound = () => {
+        board.length = 0;
+        display.showBoard();
+
+        boardCell.forEach((cell) => {
+            cell.classList.toggle('hover');
+            cell.addEventListener('click', Gameboard.addMarker);
+        });
+
+        console.log('A new round begins');
+    };
+
+    const addMarker = (e) => {
+        console.log(e.target);
+        const index = e.target.dataset.index;
+
+        if (!board[index]) {
+            board[index] = game.currentPlayer.marker;
+
+            display.showBoard();
+            game.checkWinner(game.currentPlayer);
+
+            game.currentPlayer =
+                game.currentPlayer === game.playerOne ? game.playerTwo : game.playerOne;
+        }
+    };
+
+    const reset = () => {
+        boardCell.forEach((cell) => {
+            cell.classList.toggle('hover');
+            cell.removeEventListener('click', Gameboard.addMarker);
+        });
+
+        setTimeout(_setNewRound, 2000);
+    };
+
+    return { board, addMarker, reset };
 })();
 
 const game = (() => {
-    let _currentPlayer = Gameboard.playerOne;
-
-    const addMarker = (e) => {
-        const index = e.target.dataset.index;
-
-        if (!Gameboard.board[index]) {
-            Gameboard.board[index] = _currentPlayer.marker;
-
-            display.showBoard();
-            _checkWinner(_currentPlayer);
-
-            _currentPlayer =
-                _currentPlayer === Gameboard.playerOne ? Gameboard.playerTwo : Gameboard.playerOne;
-        }
-    };
+    const playerOne = Player('Player 1', 'x');
+    const playerTwo = Player('Player 2', 'o');
+    let currentPlayer = playerOne;
 
     const _getThreeInARow = (i, end, increment = 1) => {
         const row = [];
@@ -46,19 +79,19 @@ const game = (() => {
         return row;
     };
 
-    const _checkWinner = (player) => {
-        const showWinner = () => console.log(`%c${player.name} WINS!`, 'color: lime;');
+    const checkWinner = (player) => {
+        const enemy = player === playerOne ? playerTwo : playerOne;
 
         // check columns
         for (let i = 0; i < 3; i++) {
             const jackpot = _getThreeInARow(i, i + 6, 3).every((n) => n === player.marker);
-            if (jackpot) showWinner();
+            if (jackpot) player.winRound(enemy);
         }
 
         // check rows
         for (let i = 0; i <= 6; i += 3) {
             const jackpot = _getThreeInARow(i, i + 2).every((n) => n === player.marker);
-            if (jackpot) showWinner();
+            if (jackpot) player.winRound(enemy);
         }
 
         // check diagonally
@@ -67,27 +100,32 @@ const game = (() => {
                 i === 0
                     ? _getThreeInARow(i, 8, 4).every((n) => n === player.marker)
                     : _getThreeInARow(i, 6, 2).every((n) => n === player.marker);
-            if (jackpot) showWinner();
+            if (jackpot) player.winRound(enemy);
         }
     };
 
-    return {
-        addMarker
-    };
+    return { playerOne, playerTwo, currentPlayer, checkWinner };
 })();
 
 const display = (() => {
     const showBoard = () => {
         for (let i = 0; i < 9; i++) {
-            const cell = document.querySelector(`[data-index='${i}']`);
+            document.querySelector(`[data-index='${i}']`).textContent = Gameboard.board[i];
+        }
+    };
 
-            cell.textContent = Gameboard.board[i];
+    const removeHealthBar = (name) => {
+        if (name === 'Player 1') {
+            playerOneHealth.removeChild(playerOneHealth.lastElementChild);
+        } else {
+            playerTwoHealth.removeChild(playerTwoHealth.lastElementChild);
         }
     };
 
     return {
-        showBoard
+        showBoard,
+        removeHealthBar
     };
 })();
 
-boardCell.forEach((cell) => cell.addEventListener('click', game.addMarker));
+boardCell.forEach((cell) => cell.addEventListener('click', Gameboard.addMarker));
