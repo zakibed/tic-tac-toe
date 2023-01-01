@@ -2,23 +2,26 @@ const boardGrid = document.querySelector('#gameboard');
 const boardCell = document.querySelectorAll('.cell');
 const playerOneHealth = document.querySelector('#player-one .health');
 const playerTwoHealth = document.querySelector('#player-two .health');
+const roundWinner = document.querySelector('#results p:first-child');
+const results = document.querySelector('#results p:last-child');
 
 const Player = (name, marker) => {
     let health = 5;
 
     const winRound = (enemy) => {
-        enemy.loseRound();
-        console.log(`%c${name} WINS this round!`, 'color: lime;');
+        enemy.health--;
+        display.removeHealthBar(enemy);
+
+        if (enemy.health > 0) {
+            Gameboard.reset();
+            display.showResults(name, 'WINS this round!');
+        } else {
+            display.showResults(name, 'WINS THE GAME!');
+            Gameboard.toggle(false);
+        }
     };
 
-    const loseRound = () => {
-        health--;
-        display.removeHealthBar(name);
-        Gameboard.reset();
-        console.log(`%c${name}'s health: ${health}`, 'color: red;');
-    };
-
-    return { name, marker, health, winRound, loseRound };
+    return { name, marker, health, winRound };
 };
 
 const Gameboard = (() => {
@@ -28,16 +31,33 @@ const Gameboard = (() => {
         board.length = 0;
         display.showBoard();
 
-        boardCell.forEach((cell) => {
-            cell.classList.toggle('hover');
-            cell.addEventListener('click', Gameboard.addMarker);
-        });
+        display.showResults('', 'A new round begins!');
 
-        console.log('A new round begins');
+        setTimeout(() => {
+            toggle(true);
+            display.showResults('', '');
+        }, 1500);
+    };
+
+    const reset = () => {
+        game.currentPlayer = game.playerTwo;
+        toggle(false);
+        setTimeout(_setNewRound, 2000);
+    };
+
+    const toggle = (add) => {
+        boardCell.forEach((cell) => {
+            if (add) {
+                cell.classList.add('hover');
+                cell.addEventListener('click', Gameboard.addMarker);
+            } else {
+                cell.classList.remove('hover');
+                cell.removeEventListener('click', Gameboard.addMarker);
+            }
+        });
     };
 
     const addMarker = (e) => {
-        console.log(e.target);
         const index = e.target.dataset.index;
 
         if (!board[index]) {
@@ -51,16 +71,7 @@ const Gameboard = (() => {
         }
     };
 
-    const reset = () => {
-        boardCell.forEach((cell) => {
-            cell.classList.toggle('hover');
-            cell.removeEventListener('click', Gameboard.addMarker);
-        });
-
-        setTimeout(_setNewRound, 2000);
-    };
-
-    return { board, addMarker, reset };
+    return { board, reset, toggle, addMarker };
 })();
 
 const game = (() => {
@@ -114,16 +125,29 @@ const display = (() => {
         }
     };
 
-    const removeHealthBar = (name) => {
-        if (name === 'Player 1') {
-            playerOneHealth.removeChild(playerOneHealth.lastElementChild);
+    const showResults = (name, text) => {
+        if (name) {
+            roundWinner.textContent = name === 'Player 1' ? 'BLUE' : 'RED';
+            roundWinner.style.color = name === 'Player 1' ? 'var(--blue)' : 'var(--red)';
         } else {
-            playerTwoHealth.removeChild(playerTwoHealth.lastElementChild);
+            roundWinner.textContent = name;
         }
+
+        results.textContent = text;
+    };
+
+    const removeHealthBar = (enemy) => {
+        const removeBar = (parent) => {
+            parent.lastElementChild.style.background = 'red';
+            setTimeout(() => parent.removeChild(parent.lastElementChild), 100);
+        };
+
+        removeBar(enemy.name === 'Player 1' ? playerOneHealth : playerTwoHealth);
     };
 
     return {
         showBoard,
+        showResults,
         removeHealthBar
     };
 })();

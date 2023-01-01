@@ -29,7 +29,7 @@ h1 {
 }
 
 #gameboard {
-    margin-top: 60px;
+    margin: 60px 0;
     width: 400px;
     height: 400px;
     font-size: 6rem;
@@ -74,7 +74,7 @@ h1 {
     font-size: 4rem;
     display: flex;
     align-items: center;
-    gap: 30px;
+    gap: 40px;
 }
 
 #players > div {
@@ -113,4 +113,10 @@ h1 {
 
 .health > div {
     background: white;
+}
+
+#results {
+    font-size: 3rem;
+    display: flex;
+    gap: 16px;
 }
