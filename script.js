@@ -14,9 +14,9 @@ const Player = (name, marker) => {
 
         if (enemy.health > 0) {
             Gameboard.reset();
-            display.showResults(name, 'WINS this round!');
+            display.roundResults(name, 'WINS this round!');
         } else {
-            display.showResults(name, 'WINS THE GAME!');
+            display.roundResults(name, 'WINS THE GAME!', 'var(--green)');
             Gameboard.toggle(false);
         }
     };
@@ -29,13 +29,13 @@ const Gameboard = (() => {
 
     const _setNewRound = () => {
         board.length = 0;
-        display.showBoard();
+        display.board();
 
-        display.showResults('', 'A new round begins!');
+        display.roundResults('', 'A new round begins!');
 
         setTimeout(() => {
             toggle(true);
-            display.showResults('', '');
+            display.roundResults('', '');
         }, 1500);
     };
 
@@ -63,11 +63,12 @@ const Gameboard = (() => {
         if (!board[index]) {
             board[index] = game.currentPlayer.marker;
 
-            display.showBoard();
+            display.board();
             game.checkWinner(game.currentPlayer);
 
             game.currentPlayer =
                 game.currentPlayer === game.playerOne ? game.playerTwo : game.playerOne;
+            display.currentPlayer();
         }
     };
 
@@ -119,13 +120,13 @@ const game = (() => {
 })();
 
 const display = (() => {
-    const showBoard = () => {
+    const board = () => {
         for (let i = 0; i < 9; i++) {
             document.querySelector(`[data-index='${i}']`).textContent = Gameboard.board[i];
         }
     };
 
-    const showResults = (name, text) => {
+    const roundResults = (name, text, color = 'white') => {
         if (name) {
             roundWinner.textContent = name === 'Player 1' ? 'BLUE' : 'RED';
             roundWinner.style.color = name === 'Player 1' ? 'var(--blue)' : 'var(--red)';
@@ -134,6 +135,25 @@ const display = (() => {
         }
 
         results.textContent = text;
+        results.style.color = color;
+    };
+
+    const currentPlayer = () => {
+        const hr = document.querySelectorAll('hr');
+        const hrOne = document.querySelector('#player-one hr');
+        const hrTwo = document.querySelector('#player-two hr');
+
+        const showRule = (rule) => {
+            hr.forEach((r) => {
+                r.style.display = 'none';
+                r.style.width = '0px';
+
+                rule.style.display = 'block';
+                setTimeout(() => (rule.style.width = '230px'), 1);
+            });
+        };
+
+        game.currentPlayer === game.playerOne ? showRule(hrOne) : showRule(hrTwo);
     };
 
     const removeHealthBar = (enemy) => {
@@ -145,11 +165,7 @@ const display = (() => {
         removeBar(enemy.name === 'Player 1' ? playerOneHealth : playerTwoHealth);
     };
 
-    return {
-        showBoard,
-        showResults,
-        removeHealthBar
-    };
+    return { board, roundResults, currentPlayer, removeHealthBar };
 })();
 
 boardCell.forEach((cell) => cell.addEventListener('click', Gameboard.addMarker));

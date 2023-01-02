@@ -28,6 +28,16 @@ h1 {
     font-size: 4.5rem;
 }
 
+hr {
+    border: 2px solid white;
+    text-align: left;
+    border-radius: 30px 0;
+    display: none;
+    position: absolute;
+    bottom: -3px;
+    transition: width 200ms ease-in;
+}
+
 #gameboard {
     margin: 60px 0;
     width: 400px;
@@ -74,12 +84,19 @@ h1 {
     font-size: 4rem;
     display: flex;
     align-items: center;
-    gap: 40px;
+    gap: 30px;
 }
 
 #players > div {
+    padding: 20px;
+    border-radius: 15px;
     flex-direction: column;
     gap: 20px;
+    position: relative;
+}
+
+#players > div:first-child {
+    border-color: white;
 }
 
 #players p {
@@ -88,6 +105,11 @@ h1 {
 
 #player-one {
     color: var(--blue);
+}
+
+#player-one hr {
+    width: 230px;
+    display: block;
 }
 
 #player-two {
