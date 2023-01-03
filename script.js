@@ -61,7 +61,6 @@ const Gameboard = (() => {
 
             game.currentPlayer =
                 game.currentPlayer === game.playerOne ? game.playerTwo : game.playerOne;
-            display.currentPlayer();
         }
     };
 
@@ -135,21 +134,9 @@ const game = (() => {
 const display = (() => {
     const _winner = document.querySelector('#results p:first-child');
     const _results = document.querySelector('#results p:last-child');
-    const _playerOneHealth = document.querySelector('#player-one .health');
-    const _playerTwoHealth = document.querySelector('#player-two .health');
-    const _playerOneHr = document.querySelector('#player-one hr');
-    const _playerTwoHr = document.querySelector('#player-two hr');
+    const _playerOneHealth = document.querySelector('.player.one .health');
+    const _playerTwoHealth = document.querySelector('.player.two .health');
     const boardCell = document.querySelectorAll('.cell');
-
-    const _showHr = (rule) => {
-        document.querySelectorAll('hr').forEach((r) => {
-            r.style.display = 'none';
-            r.style.width = '0px';
-
-            rule.style.display = 'block';
-            rule.style.width = '230px';
-        });
-    };
 
     const board = () => {
         for (let i = 0; i < 9; i++) {
@@ -169,10 +156,6 @@ const display = (() => {
         _results.style.color = color;
     };
 
-    const currentPlayer = () => {
-        game.currentPlayer === game.playerOne ? _showHr(_playerOneHr) : _showHr(_playerTwoHr);
-    };
-
     const removeHealthBar = (enemy) => {
         const removeBar = (parent) => {
             parent.lastElementChild.style.background = 'red';
@@ -182,7 +165,7 @@ const display = (() => {
         removeBar(enemy.name === 'Player 1' ? _playerOneHealth : _playerTwoHealth);
     };
 
-    return { boardCell, board, roundResult, currentPlayer, removeHealthBar };
+    return { boardCell, board, roundResult, removeHealthBar };
 })();
 
 display.boardCell.forEach((cell) => cell.addEventListener('click', Gameboard.addMarker));
