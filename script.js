@@ -1,10 +1,3 @@
-const boardGrid = document.querySelector('#gameboard');
-const boardCell = document.querySelectorAll('.cell');
-const playerOneHealth = document.querySelector('#player-one .health');
-const playerTwoHealth = document.querySelector('#player-two .health');
-const roundWinner = document.querySelector('#results p:first-child');
-const results = document.querySelector('#results p:last-child');
-
 const Player = (name, marker) => {
     let health = 5;
 
@@ -14,9 +7,9 @@ const Player = (name, marker) => {
 
         if (enemy.health > 0) {
             Gameboard.reset();
-            display.roundResults(name, 'WINS this round!');
+            display.roundResult(name, 'WINS this round!');
         } else {
-            display.roundResults(name, 'WINS THE GAME!', 'var(--green)');
+            display.roundResult(name, 'WINS THE GAME!', 'var(--green)');
             Gameboard.toggle(false);
         }
     };
@@ -27,26 +20,26 @@ const Player = (name, marker) => {
 const Gameboard = (() => {
     let board = [];
 
-    const _setNewRound = () => {
+    const _newRound = () => {
         board.length = 0;
         display.board();
 
-        display.roundResults('', 'A new round begins!');
+        display.roundResult('', 'A new round begins!');
 
         setTimeout(() => {
             toggle(true);
-            display.roundResults('', '');
+            display.roundResult('', '');
         }, 1500);
     };
 
     const reset = () => {
         game.currentPlayer = game.playerTwo;
         toggle(false);
-        setTimeout(_setNewRound, 2000);
+        setTimeout(_newRound, 2000);
     };
 
     const toggle = (add) => {
-        boardCell.forEach((cell) => {
+        display.boardCell.forEach((cell) => {
             if (add) {
                 cell.classList.add('hover');
                 cell.addEventListener('click', Gameboard.addMarker);
@@ -80,7 +73,12 @@ const game = (() => {
     const playerTwo = Player('Player 2', 'o');
     let currentPlayer = playerOne;
 
-    const _getThreeInARow = (i, end, increment = 1) => {
+    const _tieRound = () => {
+        Gameboard.reset();
+        display.roundResult('', `It's a TIE!`);
+    };
+
+    const _getRow = (i, end, increment = 1) => {
         const row = [];
 
         while (i <= end) {
@@ -91,28 +89,43 @@ const game = (() => {
         return row;
     };
 
-    const checkWinner = (player) => {
+    const _checkRound = (player, win) => {
         const enemy = player === playerOne ? playerTwo : playerOne;
 
+        if (win) {
+            player.winRound(enemy);
+            return true;
+        } else if (Gameboard.board.filter((x) => x).length === 9) {
+            _tieRound();
+        }
+    };
+
+    const checkWinner = (player) => {
         // check columns
         for (let i = 0; i < 3; i++) {
-            const jackpot = _getThreeInARow(i, i + 6, 3).every((n) => n === player.marker);
-            if (jackpot) player.winRound(enemy);
+            const win = _getRow(i, i + 6, 3).every((n) => n === player.marker);
+
+            if (_checkRound(player, win)) return;
+            _checkRound(player, win);
         }
 
         // check rows
         for (let i = 0; i <= 6; i += 3) {
-            const jackpot = _getThreeInARow(i, i + 2).every((n) => n === player.marker);
-            if (jackpot) player.winRound(enemy);
+            const win = _getRow(i, i + 2).every((n) => n === player.marker);
+
+            if (_checkRound(player, win)) return;
+            _checkRound(player, win);
         }
 
         // check diagonally
         for (let i = 0; i < 3; i += 2) {
-            const jackpot =
+            const win =
                 i === 0
-                    ? _getThreeInARow(i, 8, 4).every((n) => n === player.marker)
-                    : _getThreeInARow(i, 6, 2).every((n) => n === player.marker);
-            if (jackpot) player.winRound(enemy);
+                    ? _getRow(i, 8, 4).every((n) => n === player.marker)
+                    : _getRow(i, 6, 2).every((n) => n === player.marker);
+
+            if (_checkRound(player, win)) return;
+            _checkRound(player, win);
         }
     };
 
@@ -120,40 +133,44 @@ const game = (() => {
 })();
 
 const display = (() => {
+    const _winner = document.querySelector('#results p:first-child');
+    const _results = document.querySelector('#results p:last-child');
+    const _playerOneHealth = document.querySelector('#player-one .health');
+    const _playerTwoHealth = document.querySelector('#player-two .health');
+    const _playerOneHr = document.querySelector('#player-one hr');
+    const _playerTwoHr = document.querySelector('#player-two hr');
+    const boardCell = document.querySelectorAll('.cell');
+
+    const _showHr = (rule) => {
+        document.querySelectorAll('hr').forEach((r) => {
+            r.style.display = 'none';
+            r.style.width = '0px';
+
+            rule.style.display = 'block';
+            rule.style.width = '230px';
+        });
+    };
+
     const board = () => {
         for (let i = 0; i < 9; i++) {
             document.querySelector(`[data-index='${i}']`).textContent = Gameboard.board[i];
         }
     };
 
-    const roundResults = (name, text, color = 'white') => {
+    const roundResult = (name, text, color = 'white') => {
         if (name) {
-            roundWinner.textContent = name === 'Player 1' ? 'BLUE' : 'RED';
-            roundWinner.style.color = name === 'Player 1' ? 'var(--blue)' : 'var(--red)';
+            _winner.textContent = name === 'Player 1' ? 'BLUE' : 'RED';
+            _winner.style.color = name === 'Player 1' ? 'var(--blue)' : 'var(--red)';
         } else {
-            roundWinner.textContent = name;
+            _winner.textContent = name;
         }
 
-        results.textContent = text;
-        results.style.color = color;
+        _results.textContent = text;
+        _results.style.color = color;
     };
 
     const currentPlayer = () => {
-        const hr = document.querySelectorAll('hr');
-        const hrOne = document.querySelector('#player-one hr');
-        const hrTwo = document.querySelector('#player-two hr');
-
-        const showRule = (rule) => {
-            hr.forEach((r) => {
-                r.style.display = 'none';
-                r.style.width = '0px';
-
-                rule.style.display = 'block';
-                setTimeout(() => (rule.style.width = '230px'), 1);
-            });
-        };
-
-        game.currentPlayer === game.playerOne ? showRule(hrOne) : showRule(hrTwo);
+        game.currentPlayer === game.playerOne ? _showHr(_playerOneHr) : _showHr(_playerTwoHr);
     };
 
     const removeHealthBar = (enemy) => {
@@ -162,10 +179,10 @@ const display = (() => {
             setTimeout(() => parent.removeChild(parent.lastElementChild), 100);
         };
 
-        removeBar(enemy.name === 'Player 1' ? playerOneHealth : playerTwoHealth);
+        removeBar(enemy.name === 'Player 1' ? _playerOneHealth : _playerTwoHealth);
     };
 
-    return { board, roundResults, currentPlayer, removeHealthBar };
+    return { boardCell, board, roundResult, currentPlayer, removeHealthBar };
 })();
 
-boardCell.forEach((cell) => cell.addEventListener('click', Gameboard.addMarker));
+display.boardCell.forEach((cell) => cell.addEventListener('click', Gameboard.addMarker));
