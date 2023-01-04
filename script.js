@@ -61,6 +61,7 @@ const Gameboard = (() => {
 
             game.currentPlayer =
                 game.currentPlayer === game.playerOne ? game.playerTwo : game.playerOne;
+            display.players(game.currentPlayer);
         }
     };
 
@@ -136,6 +137,8 @@ const display = (() => {
     const _results = document.querySelector('#results p:last-child');
     const _playerOneHealth = document.querySelector('.player.one .health');
     const _playerTwoHealth = document.querySelector('.player.two .health');
+    const _playerOneTurn = document.querySelector('.player.one .current-player');
+    const _playerTwoTurn = document.querySelector('.player.two .current-player');
     const boardCell = document.querySelectorAll('.cell');
 
     const board = () => {
@@ -146,8 +149,8 @@ const display = (() => {
 
     const roundResult = (name, text, color = 'white') => {
         if (name) {
-            _winner.textContent = name === 'Player 1' ? 'BLUE' : 'RED';
-            _winner.style.color = name === 'Player 1' ? 'var(--blue)' : 'var(--red)';
+            _winner.textContent = name;
+            _winner.style.color = game.currentPlayer.name === name ? 'var(--red)' : 'var(--blue)';
         } else {
             _winner.textContent = name;
         }
@@ -156,16 +159,32 @@ const display = (() => {
         _results.style.color = color;
     };
 
+    const players = (player) => {
+        const showPlayer = (playerTurn, enemyTurn) => {
+            playerTurn.closest('p').style.display = 'block';
+            enemyTurn.closest('p').style.display = 'none';
+            playerTurn.textContent = `${player.name}'s`;
+        };
+
+        document.querySelector('.player.one .name').textContent = game.playerOne.name;
+        document.querySelector('.player.two .name').textContent = game.playerTwo.name;
+
+        player === game.playerOne
+            ? showPlayer(_playerOneTurn, _playerTwoTurn)
+            : showPlayer(_playerTwoTurn, _playerOneTurn);
+    };
+
     const removeHealthBar = (enemy) => {
-        const removeBar = (parent) => {
+        const remove = (parent) => {
             parent.lastElementChild.style.background = 'red';
             setTimeout(() => parent.removeChild(parent.lastElementChild), 100);
         };
 
-        removeBar(enemy.name === 'Player 1' ? _playerOneHealth : _playerTwoHealth);
+        remove(enemy === game.playerOne ? _playerOneHealth : _playerTwoHealth);
     };
 
-    return { boardCell, board, roundResult, removeHealthBar };
+    return { boardCell, board, roundResult, players, removeHealthBar };
 })();
 
+display.players(game.currentPlayer);
 display.boardCell.forEach((cell) => cell.addEventListener('click', Gameboard.addMarker));

@@ -81,10 +81,13 @@ h1 {
 .player {
     font-size: 4rem;
     border-radius: 15px;
+    position: relative;
 }
 
 .player p {
-    font-size: 3rem;
+    font-size: 2rem;
+    color: white;
+    position: absolute;
 }
 
 .player.one {
@@ -93,19 +96,28 @@ h1 {
     grid-area: player-one;
 }
 
+.player.one .current-player {
+    color: var(--blue);
+}
+
 .player.two {
     color: var(--red);
     grid-area: player-two;
 }
 
-.marker {
+.player.two .current-player {
+    color: var(--red);
+}
+
+.name {
+    margin-left: 10px;
     font-family: 'Comic Neue', Arial, Helvetica, sans-serif;
     font-size: 3.3rem;
-    vertical-align: 12px;
+    vertical-align: 3px;
 }
 
 .health {
-    margin: 20px auto 0;
+    margin: 20px auto;
     height: 60px;
     width: 270px;
     padding: 8px 6px;
