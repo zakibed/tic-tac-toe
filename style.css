@@ -13,7 +13,8 @@
     --green: #3fff21;
 }
 
-body {
+body,
+button {
     font-family: 'Comic Neue', Arial, Helvetica, sans-serif;
     font-weight: 700;
     color: white;
@@ -24,6 +25,22 @@ h1 {
     margin: 0 auto;
     font-size: 4.7rem;
     grid-area: header;
+}
+
+button {
+    padding: 10px 30px;
+    font-size: 2.5rem;
+    background: var(--dark);
+    border: 4px solid white;
+    border-radius: 12px;
+    cursor: pointer;
+    grid-area: results;
+    transition: all 80ms ease-in;
+}
+
+button:hover {
+    color: var(--dark);
+    background: white;
 }
 
 .container {
@@ -82,6 +99,7 @@ h1 {
     font-size: 4rem;
     border-radius: 15px;
     position: relative;
+    display: none;
 }
 
 .player p {
@@ -112,20 +130,20 @@ h1 {
 .name {
     margin-left: 10px;
     font-family: 'Comic Neue', Arial, Helvetica, sans-serif;
-    font-size: 3.3rem;
+    font-size: 2.8rem;
     vertical-align: 3px;
 }
 
 .health {
     margin: 20px auto;
-    height: 60px;
-    width: 270px;
-    padding: 8px 6px;
+    height: 55px;
+    width: 240px;
+    padding: 7px 5px;
     border: 4px solid white;
     border-radius: 8px;
     display: grid;
-    gap: 6px;
-    grid-template-columns: repeat(auto-fill, minmax(45px, 1fr));
+    gap: 5px;
+    grid-template-columns: repeat(auto-fill, minmax(35px, 1fr));
 }
 
 .health > div {
@@ -134,7 +152,7 @@ h1 {
 
 #results {
     margin: 0 auto;
-    font-size: 3rem;
+    font-size: 2.8rem;
     display: flex;
     gap: 16px;
     grid-area: results;

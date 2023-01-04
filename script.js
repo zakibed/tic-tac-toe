@@ -129,7 +129,15 @@ const game = (() => {
         }
     };
 
-    return { playerOne, playerTwo, currentPlayer, checkWinner };
+    const start = () => {
+        document.querySelectorAll('.player').forEach((player) => (player.style.display = 'block'));
+        display.players(currentPlayer);
+        display.startGameBtn.style.display = 'none';
+        display.boardCell.forEach((cell) => cell.addEventListener('click', Gameboard.addMarker));
+        Gameboard.toggle(true);
+    };
+
+    return { playerOne, playerTwo, currentPlayer, checkWinner, start };
 })();
 
 const display = (() => {
@@ -139,6 +147,7 @@ const display = (() => {
     const _playerTwoHealth = document.querySelector('.player.two .health');
     const _playerOneTurn = document.querySelector('.player.one .current-player');
     const _playerTwoTurn = document.querySelector('.player.two .current-player');
+    const startGameBtn = document.querySelector('button');
     const boardCell = document.querySelectorAll('.cell');
 
     const board = () => {
@@ -160,7 +169,7 @@ const display = (() => {
     };
 
     const players = (player) => {
-        const showPlayer = (playerTurn, enemyTurn) => {
+        const showTurn = (playerTurn, enemyTurn) => {
             playerTurn.closest('p').style.display = 'block';
             enemyTurn.closest('p').style.display = 'none';
             playerTurn.textContent = `${player.name}'s`;
@@ -170,8 +179,8 @@ const display = (() => {
         document.querySelector('.player.two .name').textContent = game.playerTwo.name;
 
         player === game.playerOne
-            ? showPlayer(_playerOneTurn, _playerTwoTurn)
-            : showPlayer(_playerTwoTurn, _playerOneTurn);
+            ? showTurn(_playerOneTurn, _playerTwoTurn)
+            : showTurn(_playerTwoTurn, _playerOneTurn);
     };
 
     const removeHealthBar = (enemy) => {
@@ -183,8 +192,8 @@ const display = (() => {
         remove(enemy === game.playerOne ? _playerOneHealth : _playerTwoHealth);
     };
 
-    return { boardCell, board, roundResult, players, removeHealthBar };
+    return { startGameBtn, boardCell, board, roundResult, players, removeHealthBar };
 })();
 
-display.players(game.currentPlayer);
-display.boardCell.forEach((cell) => cell.addEventListener('click', Gameboard.addMarker));
+// display.players(game.currentPlayer);
+display.startGameBtn.addEventListener('click', game.start);
