@@ -3,6 +3,7 @@ const Player = (name, marker) => {
 
     const winRound = (enemy) => {
         enemy.health--;
+
         display.removeHealthBar(enemy);
 
         if (enemy.health > 0) {
@@ -22,8 +23,8 @@ const Gameboard = (() => {
 
     const _newRound = () => {
         board.length = 0;
-        display.board();
 
+        display.board();
         display.roundResult('', 'A new round begins!');
 
         setTimeout(() => {
@@ -34,6 +35,7 @@ const Gameboard = (() => {
 
     const reset = () => {
         game.currentPlayer = game.playerTwo;
+
         toggle(false);
         setTimeout(_newRound, 2000);
     };
@@ -61,6 +63,7 @@ const Gameboard = (() => {
 
             game.currentPlayer =
                 game.currentPlayer === game.playerOne ? game.playerTwo : game.playerOne;
+
             display.players(game.currentPlayer);
         }
     };
@@ -131,9 +134,9 @@ const game = (() => {
 
     const start = () => {
         document.querySelectorAll('.player').forEach((player) => (player.style.display = 'block'));
-        display.players(currentPlayer);
         display.startGameBtn.style.display = 'none';
-        display.boardCell.forEach((cell) => cell.addEventListener('click', Gameboard.addMarker));
+
+        display.players(currentPlayer);
         Gameboard.toggle(true);
     };
 
@@ -159,7 +162,7 @@ const display = (() => {
     const roundResult = (name, text, color = 'white') => {
         if (name) {
             _winner.textContent = name;
-            _winner.style.color = game.currentPlayer.name === name ? 'var(--red)' : 'var(--blue)';
+            _winner.style.color = name === game.playerOne.name ? 'var(--blue)' : 'var(--red)';
         } else {
             _winner.textContent = name;
         }
@@ -195,5 +198,4 @@ const display = (() => {
     return { startGameBtn, boardCell, board, roundResult, players, removeHealthBar };
 })();
 
-// display.players(game.currentPlayer);
 display.startGameBtn.addEventListener('click', game.start);
