@@ -103,6 +103,17 @@ const game = (() => {
         }
     };
 
+    const start = () => {
+        document.querySelectorAll('.player').forEach((player) => (player.style.display = 'block'));
+        display.gameBoard.style.display = 'grid';
+
+        display.form.style.display = 'none';
+        display.startGameBtn.style.display = 'none';
+
+        display.players(currentPlayer);
+        Gameboard.toggle(true);
+    };
+
     const checkWinner = (player) => {
         // check columns
         for (let i = 0; i < 3; i++) {
@@ -132,15 +143,7 @@ const game = (() => {
         }
     };
 
-    const start = () => {
-        document.querySelectorAll('.player').forEach((player) => (player.style.display = 'block'));
-        display.startGameBtn.style.display = 'none';
-
-        display.players(currentPlayer);
-        Gameboard.toggle(true);
-    };
-
-    return { playerOne, playerTwo, currentPlayer, checkWinner, start };
+    return { playerOne, playerTwo, currentPlayer, start, checkWinner };
 })();
 
 const display = (() => {
@@ -150,8 +153,10 @@ const display = (() => {
     const _playerTwoHealth = document.querySelector('.player.two .health');
     const _playerOneTurn = document.querySelector('.player.one .current-player');
     const _playerTwoTurn = document.querySelector('.player.two .current-player');
-    const startGameBtn = document.querySelector('button');
+    const startGameBtn = document.querySelector('#start-game-btn');
+    const gameBoard = document.querySelector('#gameboard');
     const boardCell = document.querySelectorAll('.cell');
+    const form = document.querySelector('form');
 
     const board = () => {
         for (let i = 0; i < 9; i++) {
@@ -195,7 +200,16 @@ const display = (() => {
         remove(enemy === game.playerOne ? _playerOneHealth : _playerTwoHealth);
     };
 
-    return { startGameBtn, boardCell, board, roundResult, players, removeHealthBar };
+    return {
+        startGameBtn,
+        gameBoard,
+        boardCell,
+        board,
+        form,
+        roundResult,
+        players,
+        removeHealthBar
+    };
 })();
 
 display.startGameBtn.addEventListener('click', game.start);
