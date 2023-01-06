@@ -72,8 +72,8 @@ const Gameboard = (() => {
 })();
 
 const game = (() => {
-    const playerOne = Player('Player 1', 'x');
-    const playerTwo = Player('Player 2', 'o');
+    let playerOne = Player('Player 1', 'x');
+    let playerTwo = Player('Player 2', 'o');
     let currentPlayer = playerOne;
 
     const _tieRound = () => {
@@ -103,15 +103,17 @@ const game = (() => {
         }
     };
 
-    const start = () => {
+    const start = (e) => {
         document.querySelectorAll('.player').forEach((player) => (player.style.display = 'block'));
         display.gameBoard.style.display = 'grid';
 
-        display.form.style.display = 'none';
-        display.startGameBtn.style.display = 'none';
+        display.playerSelection.style.display = 'none';
 
         display.players(currentPlayer);
         Gameboard.toggle(true);
+
+        display.playerSelection.reset();
+        e.preventDefault();
     };
 
     const checkWinner = (player) => {
@@ -151,12 +153,12 @@ const display = (() => {
     const _results = document.querySelector('#results p:last-child');
     const _playerOneHealth = document.querySelector('.player.one .health');
     const _playerTwoHealth = document.querySelector('.player.two .health');
-    const _playerOneTurn = document.querySelector('.player.one .current-player');
-    const _playerTwoTurn = document.querySelector('.player.two .current-player');
+    const _playerOneTurn = document.querySelector('.player.one .turn');
+    const _playerTwoTurn = document.querySelector('.player.two .turn');
     const startGameBtn = document.querySelector('#start-game-btn');
     const gameBoard = document.querySelector('#gameboard');
     const boardCell = document.querySelectorAll('.cell');
-    const form = document.querySelector('form');
+    const playerSelection = document.querySelector('#player-selection');
 
     const board = () => {
         for (let i = 0; i < 9; i++) {
@@ -167,7 +169,7 @@ const display = (() => {
     const roundResult = (name, text, color = 'white') => {
         if (name) {
             _winner.textContent = name;
-            _winner.style.color = name === game.playerOne.name ? 'var(--blue)' : 'var(--red)';
+            _winner.style.color = name === 'Player 1' ? 'var(--blue)' : 'var(--red)';
         } else {
             _winner.textContent = name;
         }
@@ -205,11 +207,11 @@ const display = (() => {
         gameBoard,
         boardCell,
         board,
-        form,
+        playerSelection,
         roundResult,
         players,
         removeHealthBar
     };
 })();
 
-display.startGameBtn.addEventListener('click', game.start);
+display.playerSelection.addEventListener('submit', game.start);

@@ -29,7 +29,7 @@ h1 {
 }
 
 .container {
-    margin-top: 8rem;
+    width: 100vw;
     display: grid;
     justify-items: center;
     align-items: center;
@@ -39,17 +39,23 @@ h1 {
         'player-one gameboard player-two'
         'results results results';
     row-gap: 50px;
-    position: relative;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
 }
 
 /* player selection form */
 #player-selection {
-    padding: 50px 0;
+    width: 100vw;
+    height: 340px;
     font-size: 2.5rem;
     background: var(--dark);
-    grid-area: gameboard;
     display: flex;
-    gap: 50px;
+    justify-content: center;
+    align-items: center;
+    gap: 80px;
+    position: relative;
 }
 
 #player-selection fieldset {
@@ -159,7 +165,7 @@ input[type='text']:focus {
     grid-area: player-one;
 }
 
-.player.one .current-player,
+.player.one .turn,
 label[for='player-one-name'] {
     color: var(--blue);
 }
@@ -169,7 +175,7 @@ label[for='player-one-name'] {
     grid-area: player-two;
 }
 
-.player.two .current-player,
+.player.two .turn,
 label[for='player-two-name'] {
     color: var(--red);
 }
@@ -198,6 +204,7 @@ label[for='player-two-name'] {
 }
 
 #results {
+    height: 20px;
     margin: 0 auto;
     font-size: 2.8rem;
     display: flex;
@@ -206,14 +213,15 @@ label[for='player-two-name'] {
 }
 
 #start-game-btn {
-    padding: 12px 35px;
+    padding: 12px 40px;
     font-size: 2.5rem;
     background: var(--dark);
     border: 4px solid white;
     border-radius: 12px;
     cursor: pointer;
-    grid-area: results;
     transition: all 80ms ease-in;
+    position: absolute;
+    bottom: -50px;
 }
 
 #start-game-btn:hover {

@@ -22,7 +22,7 @@
                     <div></div>
                 </div>
 
-                <p><span class="current-player"></span> turn!</p>
+                <p><span class="turn"></span> turn!</p>
             </div>
 
             <div class="player two">
@@ -36,7 +36,7 @@
                     <div></div>
                 </div>
 
-                <p><span class="current-player"></span> turn!</p>
+                <p><span class="turn"></span> turn!</p>
             </div>
 
             <div id="gameboard">
@@ -55,8 +55,6 @@
                 <p></p>
                 <p></p>
             </div>
-
-            <button id="start-game-btn">Start Game</button>
 
             <form id="player-selection">
                 <fieldset id="player-one-selection">
@@ -84,13 +82,6 @@
                             <label for="player-one-bot"><i class="fa-solid fa-robot"></i></label>
                         </div>
                     </div>
-
-                    <input
-                        type="text"
-                        name="player-one-name"
-                        id="player-one-name"
-                        placeholder="Player 1's name"
-                    />
                 </fieldset>
 
                 <fieldset id="player-two-selection">
@@ -118,14 +109,9 @@
                             <label for="player-two-bot"><i class="fa-solid fa-robot"></i></label>
                         </div>
                     </div>
-
-                    <input
-                        type="text"
-                        name="player-two-name"
-                        id="player-two-name"
-                        placeholder="Player 2's name"
-                    />
                 </fieldset>
+
+                <button type="submit" id="start-game-btn">Start Game</button>
             </form>
         </div>
     </body>
