@@ -46,26 +46,25 @@ h1 {
 }
 
 /* player selection form */
-#player-selection {
-    width: 100vw;
-    height: 340px;
+form {
     font-size: 2.5rem;
-    background: var(--dark);
-    display: flex;
-    justify-content: center;
-    align-items: center;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    justify-items: center;
     gap: 80px;
-    position: relative;
+    grid-area: gameboard;
 }
 
-#player-selection fieldset {
+form fieldset {
     border: none;
 }
 
-.player-type {
+.player-type,
+.input-row {
     display: flex;
+    flex-wrap: wrap;
     justify-content: center;
-    gap: 15px;
+    gap: 12px;
 }
 
 .player-type i {
@@ -75,6 +74,7 @@ h1 {
 
 .player-type label {
     color: gray;
+    display: inline;
 }
 
 input[type='radio'] {
@@ -91,22 +91,23 @@ input[name='player-two-type']:checked + label,
     color: var(--red);
 }
 
-input[type='text'] {
-    appearance: none;
-    width: 370px;
-    margin: 20px 0;
-    padding: 10px 5px;
-    font-size: 2rem;
-    color: white;
+#start-game-btn {
+    padding: 12px 40px;
+    font-size: 2.5rem;
     background: var(--dark);
-    border: none;
-    border-bottom: 3px solid white;
+    border: 4px solid white;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 80ms ease-in;
+    grid-column: span 2;
 }
 
-input[type='text']:focus {
-    outline: none;
+#start-game-btn:hover {
+    color: var(--dark);
+    background: white;
 }
 
+/* game board */
 #gameboard {
     width: 400px;
     height: 400px;
@@ -146,6 +147,7 @@ input[type='text']:focus {
     border-radius: 0 0 15px 0;
 }
 
+/* players */
 .player {
     font-size: 4rem;
     border-radius: 15px;
@@ -165,8 +167,7 @@ input[type='text']:focus {
     grid-area: player-one;
 }
 
-.player.one .turn,
-label[for='player-one-name'] {
+.player.one .turn {
     color: var(--blue);
 }
 
@@ -175,8 +176,7 @@ label[for='player-one-name'] {
     grid-area: player-two;
 }
 
-.player.two .turn,
-label[for='player-two-name'] {
+.player.two .turn {
     color: var(--red);
 }
 
@@ -210,21 +210,4 @@ label[for='player-two-name'] {
     display: flex;
     gap: 16px;
     grid-area: results;
-}
-
-#start-game-btn {
-    padding: 12px 40px;
-    font-size: 2.5rem;
-    background: var(--dark);
-    border: 4px solid white;
-    border-radius: 12px;
-    cursor: pointer;
-    transition: all 80ms ease-in;
-    position: absolute;
-    bottom: -50px;
-}
-
-#start-game-btn:hover {
-    color: var(--dark);
-    background: white;
 }

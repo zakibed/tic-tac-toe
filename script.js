@@ -107,12 +107,13 @@ const game = (() => {
         document.querySelectorAll('.player').forEach((player) => (player.style.display = 'block'));
         display.gameBoard.style.display = 'grid';
 
-        display.playerSelection.style.display = 'none';
+        display.playerType();
+        display.form.style.display = 'none';
 
         display.players(currentPlayer);
         Gameboard.toggle(true);
 
-        display.playerSelection.reset();
+        display.form.reset();
         e.preventDefault();
     };
 
@@ -155,10 +156,12 @@ const display = (() => {
     const _playerTwoHealth = document.querySelector('.player.two .health');
     const _playerOneTurn = document.querySelector('.player.one .turn');
     const _playerTwoTurn = document.querySelector('.player.two .turn');
+    const _playerOneType = document.querySelector('#player-one-player');
+    const _playerTwoType = document.querySelector('#player-two-player');
     const startGameBtn = document.querySelector('#start-game-btn');
     const gameBoard = document.querySelector('#gameboard');
     const boardCell = document.querySelectorAll('.cell');
-    const playerSelection = document.querySelector('#player-selection');
+    const form = document.querySelector('form');
 
     const board = () => {
         for (let i = 0; i < 9; i++) {
@@ -202,16 +205,27 @@ const display = (() => {
         remove(enemy === game.playerOne ? _playerOneHealth : _playerTwoHealth);
     };
 
+    const playerType = () => {
+        document.querySelector('.player.one i').className = _playerOneType.checked
+            ? 'fa-solid fa-user'
+            : 'fa-solid fa-robot';
+
+        document.querySelector('.player.two i').className = _playerTwoType.checked
+            ? 'fa-solid fa-user'
+            : 'fa-solid fa-robot';
+    };
+
     return {
         startGameBtn,
         gameBoard,
         boardCell,
         board,
-        playerSelection,
+        form,
         roundResult,
+        playerType,
         players,
         removeHealthBar
     };
 })();
 
-display.playerSelection.addEventListener('submit', game.start);
+display.form.addEventListener('submit', game.start);
