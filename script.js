@@ -1,5 +1,7 @@
 const Player = (name, marker) => {
     let health = 5;
+    let isBot = false;
+    let isTurn = false;
 
     const winRound = (enemy) => {
         enemy.health--;
@@ -15,7 +17,7 @@ const Player = (name, marker) => {
         }
     };
 
-    return { name, marker, health, winRound };
+    return { name, marker, health, isBot, isTurn, winRound };
 };
 
 const Gameboard = (() => {
@@ -52,9 +54,7 @@ const Gameboard = (() => {
         });
     };
 
-    const addMarker = (e) => {
-        const index = e.target.dataset.index;
-
+    const addMarker = (e, index = e.target.dataset.index) => {
         if (!board[index]) {
             board[index] = game.currentPlayer.marker;
 
@@ -65,6 +65,11 @@ const Gameboard = (() => {
                 game.currentPlayer === game.playerOne ? game.playerTwo : game.playerOne;
 
             display.players(game.currentPlayer);
+
+            if (game.currentPlayer.isBot) {
+                toggle(false);
+                setTimeout(game.playBotTurn, 1500);
+            }
         }
     };
 
@@ -72,13 +77,18 @@ const Gameboard = (() => {
 })();
 
 const game = (() => {
-    let playerOne = Player('Player 1', 'x');
-    let playerTwo = Player('Player 2', 'o');
+    let playerOne = Player('Player 1', 'x', false);
+    let playerTwo = Player('Player 2', 'o', false);
     let currentPlayer = playerOne;
 
     const _tieRound = () => {
         Gameboard.reset();
         display.roundResult('', `It's a TIE!`);
+    };
+
+    const _getRandomMove = () => {
+        let num = Math.floor(Math.random() * 9);
+        return Gameboard.board[num] ? _getRandomMove() : num;
     };
 
     const _getRow = (i, end, increment = 1) => {
@@ -103,17 +113,24 @@ const game = (() => {
         }
     };
 
+    const playBotTurn = () => {
+        Gameboard.toggle(true);
+
+        if (Gameboard.board.filter((x) => x).length < 9)
+            Gameboard.addMarker(null, _getRandomMove());
+    };
+
     const start = (e) => {
         document.querySelectorAll('.player').forEach((player) => (player.style.display = 'block'));
         display.gameBoard.style.display = 'grid';
 
         display.playerType();
+        display.players(currentPlayer);
+        display.form.reset();
         display.form.style.display = 'none';
 
-        display.players(currentPlayer);
-        Gameboard.toggle(true);
+        currentPlayer.isBot ? setTimeout(playBotTurn, 1000) : Gameboard.toggle(true);
 
-        display.form.reset();
         e.preventDefault();
     };
 
@@ -146,7 +163,7 @@ const game = (() => {
         }
     };
 
-    return { playerOne, playerTwo, currentPlayer, start, checkWinner };
+    return { playerOne, playerTwo, currentPlayer, playBotTurn, start, checkWinner };
 })();
 
 const display = (() => {
@@ -206,13 +223,18 @@ const display = (() => {
     };
 
     const playerType = () => {
-        document.querySelector('.player.one i').className = _playerOneType.checked
-            ? 'fa-solid fa-user'
-            : 'fa-solid fa-robot';
+        if (!_playerOneType.checked) {
+            document.querySelector('.player.one i').className = 'fa-solid fa-robot';
+            game.playerOne.isBot = true;
+        }
 
-        document.querySelector('.player.two i').className = _playerTwoType.checked
-            ? 'fa-solid fa-user'
-            : 'fa-solid fa-robot';
+        if (!_playerTwoType.checked) {
+            document.querySelector('.player.two i').className = 'fa-solid fa-robot';
+            game.playerTwo.isBot = true;
+        }
+
+        console.log(game.playerOne);
+        console.log(game.playerTwo);
     };
 
     return {
