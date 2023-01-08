@@ -1,12 +1,11 @@
 const Player = (name, marker) => {
     let health = 5;
     let isBot = false;
-    let isTurn = false;
 
     const winRound = (enemy) => {
         enemy.health--;
 
-        display.removeHealthBar(enemy);
+        display.healthBar(enemy);
 
         if (enemy.health > 0) {
             Gameboard.reset();
@@ -17,7 +16,7 @@ const Player = (name, marker) => {
         }
     };
 
-    return { name, marker, health, isBot, isTurn, winRound };
+    return { name, marker, health, isBot, winRound };
 };
 
 const Gameboard = (() => {
@@ -32,14 +31,14 @@ const Gameboard = (() => {
         setTimeout(() => {
             toggle(true);
             display.roundResult('', '');
-        }, 1500);
+        }, 1000);
     };
 
     const reset = () => {
         game.currentPlayer = game.playerTwo;
 
         toggle(false);
-        setTimeout(_newRound, 2000);
+        setTimeout(_newRound, 1100);
     };
 
     const toggle = (add) => {
@@ -68,7 +67,7 @@ const Gameboard = (() => {
 
             if (game.currentPlayer.isBot) {
                 toggle(false);
-                setTimeout(game.playBotTurn, 1500);
+                setTimeout(game.playBotTurn, 1700);
             }
         }
     };
@@ -77,18 +76,13 @@ const Gameboard = (() => {
 })();
 
 const game = (() => {
-    let playerOne = Player('Player 1', 'x', false);
-    let playerTwo = Player('Player 2', 'o', false);
+    let playerOne = Player('Player 1', 'x');
+    let playerTwo = Player('Player 2', 'o');
     let currentPlayer = playerOne;
 
     const _tieRound = () => {
         Gameboard.reset();
         display.roundResult('', `It's a TIE!`);
-    };
-
-    const _getRandomMove = () => {
-        let num = Math.floor(Math.random() * 9);
-        return Gameboard.board[num] ? _getRandomMove() : num;
     };
 
     const _getRow = (i, end, increment = 1) => {
@@ -114,10 +108,14 @@ const game = (() => {
     };
 
     const playBotTurn = () => {
+        const getRandomMove = () => {
+            let num = Math.floor(Math.random() * 9);
+            return Gameboard.board[num] ? getRandomMove() : num;
+        };
+
         Gameboard.toggle(true);
 
-        if (Gameboard.board.filter((x) => x).length < 9)
-            Gameboard.addMarker(null, _getRandomMove());
+        if (Gameboard.board.filter((x) => x).length < 9) Gameboard.addMarker(null, getRandomMove());
     };
 
     const start = (e) => {
@@ -205,21 +203,20 @@ const display = (() => {
             playerTurn.textContent = `${player.name}'s`;
         };
 
-        document.querySelector('.player.one .name').textContent = game.playerOne.name;
-        document.querySelector('.player.two .name').textContent = game.playerTwo.name;
-
         player === game.playerOne
             ? showTurn(_playerOneTurn, _playerTwoTurn)
             : showTurn(_playerTwoTurn, _playerOneTurn);
     };
 
-    const removeHealthBar = (enemy) => {
-        const remove = (parent) => {
-            parent.lastElementChild.style.background = 'red';
-            setTimeout(() => parent.removeChild(parent.lastElementChild), 100);
+    const healthBar = (enemy) => {
+        const removeHealth = (parent) => {
+            const health = parent.lastElementChild;
+
+            health.style.background = 'red';
+            setTimeout(() => parent.removeChild(health), 200);
         };
 
-        remove(enemy === game.playerOne ? _playerOneHealth : _playerTwoHealth);
+        removeHealth(enemy === game.playerOne ? _playerOneHealth : _playerTwoHealth);
     };
 
     const playerType = () => {
@@ -232,9 +229,6 @@ const display = (() => {
             document.querySelector('.player.two i').className = 'fa-solid fa-robot';
             game.playerTwo.isBot = true;
         }
-
-        console.log(game.playerOne);
-        console.log(game.playerTwo);
     };
 
     return {
@@ -246,7 +240,7 @@ const display = (() => {
         roundResult,
         playerType,
         players,
-        removeHealthBar
+        healthBar
     };
 })();
 
