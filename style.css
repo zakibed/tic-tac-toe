@@ -91,7 +91,8 @@ input[name='player-two-type']:checked + label,
     color: var(--red);
 }
 
-#start-game-btn {
+#start-game-btn,
+#play-again-btn {
     padding: 12px 40px;
     font-size: 2.5rem;
     background: var(--dark);
@@ -102,9 +103,17 @@ input[name='player-two-type']:checked + label,
     grid-column: span 2;
 }
 
-#start-game-btn:hover {
+#start-game-btn:hover,
+#play-again-btn:hover {
     color: var(--dark);
     background: white;
+}
+
+#play-again-btn {
+    grid-area: results;
+    display: none;
+    position: absolute;
+    top: 10px;
 }
 
 /* game board */
