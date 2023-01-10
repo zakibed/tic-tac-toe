@@ -45,7 +45,6 @@ h1 {
     transform: translate(-50%, -50%);
 }
 
-/* player selection form */
 form {
     font-size: 2.5rem;
     display: grid;
@@ -116,7 +115,6 @@ input[name='player-two-type']:checked + label,
     top: 10px;
 }
 
-/* game board */
 #gameboard {
     width: 400px;
     height: 400px;
@@ -156,7 +154,6 @@ input[name='player-two-type']:checked + label,
     border-radius: 0 0 15px 0;
 }
 
-/* players */
 .player {
     font-size: 4rem;
     border-radius: 15px;

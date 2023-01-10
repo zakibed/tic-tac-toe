@@ -4,14 +4,12 @@ const Player = (name, marker) => {
 
     const winRound = (enemy) => {
         enemy.health--;
-
         display.removeHealthBar(enemy);
 
         if (enemy.health === 0) {
             display.roundResult(name, 'WINS THE GAME!', 'var(--green)');
             Gameboard.toggle(false);
             game.isOver = true;
-
             setTimeout(display.endGame, 2000);
         } else {
             display.roundResult(name, 'WINS this round!');
@@ -41,6 +39,7 @@ const Gameboard = (() => {
         game.currentPlayer = game.playerTwo;
 
         toggle(false);
+
         setTimeout(_newRound, 1100);
     };
 
@@ -71,7 +70,7 @@ const Gameboard = (() => {
 
             if (game.currentPlayer.isBot) {
                 toggle(false);
-                setTimeout(game.playBotTurn, 1700);
+                setTimeout(game.playBotTurn, 1400);
             }
         }
     };
@@ -85,11 +84,6 @@ const game = (() => {
     let currentPlayer = playerOne;
     let isOver = false;
 
-    const _tieRound = () => {
-        Gameboard.reset();
-        display.roundResult('', `It's a TIE!`);
-    };
-
     const _getRow = (i, end, increment = 1) => {
         const row = [];
 
@@ -99,6 +93,11 @@ const game = (() => {
         }
 
         return row;
+    };
+
+    const _tieRound = () => {
+        display.roundResult('', `It's a TIE!`);
+        Gameboard.reset();
     };
 
     const _checkRound = (player, win) => {
@@ -112,19 +111,6 @@ const game = (() => {
         }
     };
 
-    const playBotTurn = () => {
-        const getRandomMove = () => {
-            let num = Math.floor(Math.random() * 9);
-            return Gameboard.board[num] ? getRandomMove() : num;
-        };
-
-        if (!game.isOver) Gameboard.toggle(true);
-
-        if (!game.isOver && Gameboard.board.filter((x) => x).length < 9) {
-            Gameboard.addMarker(null, getRandomMove());
-        }
-    };
-
     const start = (e) => {
         document.querySelectorAll('.player').forEach((player) => (player.style.display = 'block'));
         display.gameBoard.style.display = 'grid';
@@ -134,7 +120,7 @@ const game = (() => {
         display.form.reset();
         display.form.style.display = 'none';
 
-        playerOne.isBot ? setTimeout(playBotTurn, 1000) : Gameboard.toggle(true);
+        playerOne.isBot ? setTimeout(playBotTurn, 1200) : Gameboard.toggle(true);
 
         e.preventDefault();
     };
@@ -143,7 +129,7 @@ const game = (() => {
         Gameboard.board.length = 0;
 
         display.board();
-        display.fullHealth();
+        display.refillHealthBar();
         display.players(playerOne);
         display.playAgainBtn.style.display = 'none';
 
@@ -182,15 +168,28 @@ const game = (() => {
         }
     };
 
+    const playBotTurn = () => {
+        const getRandomMove = () => {
+            let num = Math.floor(Math.random() * 9);
+            return Gameboard.board[num] ? getRandomMove() : num;
+        };
+
+        if (!game.isOver) Gameboard.toggle(true);
+
+        if (!game.isOver && Gameboard.board.filter((x) => x).length < 9) {
+            Gameboard.addMarker(null, getRandomMove());
+        }
+    };
+
     return {
         playerOne,
         playerTwo,
         currentPlayer,
         isOver,
-        playBotTurn,
         start,
         restart,
-        checkWinner
+        checkWinner,
+        playBotTurn
     };
 })();
 
@@ -240,8 +239,8 @@ const display = (() => {
         _results.style.color = color;
     };
 
-    const fullHealth = () => {
-        const replenish = (parent) => {
+    const refillHealthBar = () => {
+        const refill = (parent) => {
             const health = parent.children.length;
 
             for (let i = 0; i < 5 - health; i++) {
@@ -253,8 +252,8 @@ const display = (() => {
         game.playerOne.health = 5;
         game.playerTwo.health = 5;
 
-        replenish(_playerOneHealth);
-        replenish(_playerTwoHealth);
+        refill(_playerOneHealth);
+        refill(_playerTwoHealth);
     };
 
     const removeHealthBar = (enemy) => {
@@ -301,7 +300,7 @@ const display = (() => {
         board,
         endGame,
         roundResult,
-        fullHealth,
+        refillHealthBar,
         removeHealthBar,
         playerType,
         players
