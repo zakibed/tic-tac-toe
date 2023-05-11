@@ -4,127 +4,69 @@
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>Tic-Tac-Toe</title>
+        <link rel="icon" href="favicon.ico" />
         <link rel="stylesheet" href="style.css" />
         <script src="script.js" defer></script>
         <script src="https://kit.fontawesome.com/ea6e9201dc.js" crossorigin="anonymous"></script>
     </head>
     <body>
-        <div class="container">
+        <div class="game-container hidden">
             <h1>Tic-Tac-Toe!</h1>
 
-            <div class="player one">
-                <i class="fa-solid fa-user"><span class="name">Player 1</span></i>
-                <div class="health">
-                    <div></div>
-                    <div></div>
-                    <div></div>
-                    <div></div>
-                    <div></div>
-                </div>
-
-                <p><span class="turn"></span> turn!</p>
+            <div id="player-one" class="player blue">
+                <i></i>
+                <p class="name"></p>
+                <div class="health-bar"></div>
+                <p class="turn"></p>
             </div>
 
-            <div class="player two">
-                <i class="fa-solid fa-user"><span class="name">Player 2</span></i>
-                <div class="health">
-                    <div></div>
-                    <div></div>
-                    <div></div>
-                    <div></div>
-                    <div></div>
-                </div>
-
-                <p><span class="turn"></span> turn!</p>
+            <div id="player-two" class="player red">
+                <i></i>
+                <p class="name"></p>
+                <div class="health-bar"></div>
+                <p class="turn"></p>
             </div>
 
-            <div id="gameboard">
-                <div data-index="0" class="cell"></div>
-                <div data-index="1" class="cell"></div>
-                <div data-index="2" class="cell"></div>
-                <div data-index="3" class="cell"></div>
-                <div data-index="4" class="cell"></div>
-                <div data-index="5" class="cell"></div>
-                <div data-index="6" class="cell"></div>
-                <div data-index="7" class="cell"></div>
-                <div data-index="8" class="cell"></div>
+            <div id="game-board"></div>
+
+            <p id="game-results"></p>
+
+            <div id="round-end-btns">
+                <button id="next-round-btn" class="hidden"><i class="fa-solid fa-forward"></i>Next Round</button>
+                <button id="new-game-btn" class="hidden"><i class="fa-solid fa-rotate-left"></i>New Game</button>
             </div>
-
-            <div id="results">
-                <p></p>
-                <p></p>
-            </div>
-
-            <form>
-                <fieldset id="player-one-selection">
-                    <div class="player-type">
-                        <p>Player 1:</p>
-
-                        <div class="input-row">
-                            <div>
-                                <input
-                                    type="radio"
-                                    name="player-one-type"
-                                    id="player-one-player"
-                                    value="player"
-                                    checked
-                                />
-                                <label for="player-one-player"
-                                    ><i class="fa-solid fa-user"></i
-                                ></label>
-                            </div>
-
-                            <div>
-                                <input
-                                    type="radio"
-                                    name="player-one-type"
-                                    id="player-one-bot"
-                                    value="bot"
-                                />
-                                <label for="player-one-bot"
-                                    ><i class="fa-solid fa-robot"></i
-                                ></label>
-                            </div>
-                        </div>
-                    </div>
-                </fieldset>
-
-                <fieldset id="player-two-selection">
-                    <div class="player-type">
-                        <p>Player 2:</p>
-
-                        <div class="input-row">
-                            <div>
-                                <input
-                                    type="radio"
-                                    name="player-two-type"
-                                    id="player-two-player"
-                                    value="player"
-                                    checked
-                                />
-                                <label for="player-two-player"
-                                    ><i class="fa-solid fa-user"></i
-                                ></label>
-                            </div>
-                            <div>
-                                <input
-                                    type="radio"
-                                    name="player-two-type"
-                                    id="player-two-bot"
-                                    value="bot"
-                                />
-                                <label for="player-two-bot"
-                                    ><i class="fa-solid fa-robot"></i
-                                ></label>
-                            </div>
-                        </div>
-                    </div>
-                </fieldset>
-
-                <button type="submit" id="start-game-btn">Start Game</button>
-            </form>
-
-            <button id="play-again-btn">Play Again</button>
         </div>
+
+        <form class="start-menu">
+            <h1>Tic-Tac-Toe!</h1>
+
+            <div id="player-one-select" class="player-select">
+                <p class="blue">Player 1 :</p>
+
+                <fieldset class="player-type-select">
+                    <input type="radio" name="player-one-type" id="player-one-user" value="user" checked />
+                    <label for="player-one-user"><i class="fa-solid fa-user player-one"></i></label>
+
+                    <input type="radio" name="player-one-type" id="player-one-bot" value="bot" />
+                    <label for="player-one-bot"><i class="fa-solid fa-robot"></i></label>
+                </fieldset>
+            </div>
+
+            <p>vs.</p>
+
+            <div id="player-two-select" class="player-select">
+                <p class="red">Player 2 :</p>
+
+                <fieldset class="player-type-select">
+                    <input type="radio" name="player-two-type" id="player-two-user" value="user" checked />
+                    <label for="player-two-user"><i class="fa-solid fa-user"></i></label>
+
+                    <input type="radio" name="player-two-type" id="player-two-bot" value="bot" />
+                    <label for="player-two-bot"><i class="fa-solid fa-robot"></i></label>
+                </fieldset>
+            </div>
+
+            <button type="submit" id="start-game-btn"><i class="fa-solid fa-gamepad"></i>Start Game</button>
+        </form>
     </body>
 </html>
