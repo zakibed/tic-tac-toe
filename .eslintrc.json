@@ -6,5 +6,9 @@
     },
     "extends": ["airbnb-base", "prettier"],
     "parserOptions": { "ecmaVersion": "latest" },
-    "rules": {}
+    "rules": {
+        "no-unused-vars": "off",
+        "no-plusplus": "off",
+        "no-param-reassign": ["error", { "props": false }]
+    }
 }
