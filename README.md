@@ -1,7 +1,11 @@
-# tic-tac-toe
+# Tic-Tac-Toe
 
-A simple but fun tic-tac-toe mini-game built with basic HTML, CSS and JS. Includes the option to play with bots, however, as for now, the bots only have a random move order.
+:joystick: **[Live Demo](https://ikaz1.github.io/tic-tac-toe/)**
 
-live demo: https://ikaz1.github.io/tic-tac-toe/
+Tic-Tac-Toe browser game created with JavaScript:
 
-Made for the Odin Project
+-   Start the game by choosing a player type: play against another player or bot
+-   Each player starts with 5 lives, whoever beats the other first wins the game
+-   Bot selects randomly, only marking a random empty space on the board
+
+Made for [The Odin Project](https://www.theodinproject.com/lessons/node-path-javascript-tic-tac-toe)
