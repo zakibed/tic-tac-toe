@@ -1,6 +1,6 @@
 # Tic-Tac-Toe
 
-:joystick: **[Live Demo](https://ikaz1.github.io/tic-tac-toe/)**
+:joystick: **[Live Demo](https://zakibed.github.io/tic-tac-toe/)**
 
 Tic-Tac-Toe browser game created with JavaScript:
 
